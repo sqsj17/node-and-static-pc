@@ -1,0 +1,47 @@
+﻿{% extends "_parent.html" %}
+
+{% block link %}
+<link rel="stylesheet" href="{{ resDomain }}/css/provision.css"/>
+<style>
+  .txcont {
+      line-height: 22px;
+      color: #333;
+  }
+</style>
+
+{%if(htmlAttachmentUrl)%}
+<style>
+  body {
+    height: 100vh;
+  }
+  .html-detail {
+    width: 100%;
+    height: 100vh;
+    overflow-y: hidden;
+    margin-top: -20px;
+  }
+</style>
+{% endif %}
+{% endblock link %}
+
+{% block body %}
+<!-- main begin -->
+{% if htmlAttachmentUrl %}
+<iframe class="html-detail" src="{{htmlAttachmentUrl|replace('http://','//')}}" frameborder="0"></iframe>
+{% else %}
+<div class="main ui-layout ui-category-table">
+  <div class="ui-content">
+      <div class="txcont">
+          {{content|safe}}
+      </div>
+  </div>
+</div>
+<div class="ui-close-page">
+    <a href="javascript:window.close();" class="js-close"><i class="ui-icons icons-close"></i>关闭页面</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+    {% include "./_merak_sdk.html" %}
+{% endblock %}

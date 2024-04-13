@@ -1,0 +1,256 @@
+{% extends "_parent.html" %} {% block link %}
+<link rel="stylesheet" href="{{ resDomain }}/css/main.css" />
+<link rel="stylesheet" href="{{ resDomain }}/css/layer-main.css">
+<link rel="stylesheet" href="{{ resDomain }}/css/surrender.css" /> {% endblock link %} {% block body %} {% include "product/../_header.html" %}
+<style>
+	.img-box {
+		float: left;
+		width: 160px;
+	}
+
+	.content-box {
+		text-align: left;
+		margin-left: 160px;
+		font-size: 16px;
+		min-height: 500px;
+	}
+
+	.btn-2 {
+		height: auto;
+		line-height: 30px;
+		padding: 0 20px;
+	}
+
+	.fz-1 {
+		font-size: 18px;
+	}
+</style>
+<script>
+	function openKefu(isFinance) {
+		var isFinance = isFinance;
+		var travelBusinessType = 'LFzRbZ_t9iI';
+		var financeBusinessType = 'zYE1NkKg-Fg';
+		var guestIdStr = window.getGuestId ? ('&guestId=' + encodeURIComponent(window.getGuestId())) : '';
+		var url = "https://hh.hzins.com/chat/chatting/?domain=hzins&language=zh&businessType=" +
+            financeBusinessType +
+			"&referrer=" + encodeURIComponent(window.location.href) +
+			"&msrc=QX&platform=pc&fromApp=0&title=" + encodeURIComponent('齐欣云服在线客服') +
+			guestIdStr;
+
+    var userId = $("#__encryptPartnerId").val();
+    if (userId) {
+         url += ('&mid=' + encodeURIComponent(userId));
+    } 
+		window.open(url);
+	}
+</script>
+<div class="ui-main">
+	<div class="ui-wrap bgfw m-t-20">
+		<div class="surrender-area-body">
+			<h3 class="f18 bold m-t-40 lh10">退保申请</h3>
+			<div class="retreat-box">
+				<div class="tac surrender-fail lh20 m-t-40 hidden" id="online-box">
+					<div class="img-box">
+						<i class="icon-cue fcsc"></i>
+					</div>
+					<div class="content-box">
+
+						<p class="fz-1 m-b-30">非常抱歉,退保申请失败！本产品不支持线上退保，如需继续退保：</p>
+
+						{% if isShowServiceQq %}
+						<p>可电话联系客服：{{partnerCpsConfig.servicePhone}} </p>
+						{% else %}
+						<p> 1. 可电话联系客服：{{partnerCpsConfig.servicePhone}} </p>
+						<p>2. 可在线联系客服：在线客服
+							<span class="btn-2" onclick="openKefu()">在线客服</span>
+						</p>
+						{% endif %}
+
+					</div>
+
+				</div>
+			</div>
+			<div class="process-area hidden">
+				<ul class="clearfix">
+					<li class="process-line process-line-active"></li>
+					<li class="tac" data-step="1">
+						<p class="process-num j-process-num f18">1</p>
+						身份验证
+					</li>
+					<li class="process-line"></li>
+					<li class="tac" data-step="2">
+						<p class="process-num j-process-num f18">2</p>
+						退保确认
+					</li>
+					<li class="process-line"></li>
+					<li class="tac" data-step="3">
+						<p class="process-num j-process-num f18">3
+							<!--<i class="icon-suc f38">&#xe659;</i>失败 <i class="icon-fail f30 bold">&#xe607;</i> -->
+						</p>
+						完成
+					</li>
+					<li class="process-line"></li>
+				</ul>
+			</div>
+			<div class="j-step-content hidden">
+				<!-- 身份验证 -->
+				<div class="hidden" data-step-con="1">
+					<div class="fcsc form-group-cue">
+						<i class="icon-cue vm m-r-5">&#xe606;</i>
+						<span class="vm">退保申请必须是投保人本人</span>
+					</div>
+					<div class="surrender-form">
+						<div class="form-group m-b-10 m-t-20">
+							<div class="form-group-left">
+								<label for="tel" class="label">投保人手机号码</label>
+							</div>
+							<div class="form-group-right">
+								<label for="tel" class="label j-mobile">135****2344</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="form-group-left">
+								<label for="code" class="label ">手机验证码</label>
+							</div>
+							<div class="form-group-right">
+								<input type="text" class="ui-input code-input" id="code" placeholder="请输入手机验证码" maxlength="4" />
+								<span class="btn-code diy_mould-background-2 j-send-code">获取验证码</span>
+							</div>
+						</div>
+						<div class="form-group m-t-10 j-captcha-box hidden">
+							<div class="form-group-left">
+								<label for="code" class="label ">图片验证码</label>
+							</div>
+							<div class="form-group-right">
+								<input type="text" class="ui-input image-code-input" name="captcha" placeholder="请输入图片验证码" maxlength="4" required="" autocomplete="off"
+								/>
+								<span class="btn-code image-code">
+									<img class="verify-code" name="captcha-img" width="120" height="45" title="点击刷新" src="" />
+									<img class="fresh-btn j-fresh" title="点击刷新" src="//res.qixin18.com/trip/img/fresh.png" />
+								</span>
+							</div>
+						</div>
+						<div class="form-group m-t-30">
+							<input type="submit" class="btn-1 surrender-btn diy_mould-background-2 j-authent" value="提交" />
+						</div>
+					</div>
+					<div class="tac surrender-prompt">若非投保人本人操作，无法收到验证码，可以联系客服 400-678-8169或
+						<a href="javascript:;" class="j-kefu">在线客服</a> 申请变更信息</div>
+				</div>
+				<!-- 身份确认 -->
+				<div class="hidden" data-step-con="2">
+					<p>退保信息</p>
+					<div class="ui-table-wrap m-t-15">
+						<table class="j-confirm-table">
+							<thead>
+								<tr>
+									<th>投保单号</th>
+									<th class="tac">保障期限</th>
+									<th class="tac">投保时间</th>
+									<th>被保险人</th>
+									<th>产品名称</th>
+									<th class="tac">保险公司</th>
+									<th class="tac">保费</th>
+									<th>操作</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+					<div class="tag-box" id="tabSwitch">
+						<span class="tag-title">退保类型</span>
+						<span class="tag-item tag-active" type="1">整单退保</span>
+						<span class="tag-item" type="2">部分退保</span>
+						<div id="noSingleRetreatTip" class="surrender-no-single-retreat-tip"></div>
+					</div>
+					<div id="displayTableView" class="display-table-view">
+						<div class="top-view">
+							<p class="display-choice-insurance-count">已选择退保人(共
+								<span id="displayTableViewInsuranceCount">0</span>人)</p>
+							<p class="display-choice-insurance">选择需要退保的被保险人</p>
+						</div>
+						<div class="display-table">
+							<table>
+								<thead>
+									<tr>
+										<th class="w-p-10">序号</th>
+										<th class="w-p-40">被保人姓名</th>
+										<th class="w-p-40">证件号码</th>
+										<th class="w-p-10">操作</th>
+									</tr>
+								</thead>
+								<tbody id="display-table-body">
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<p class="m-t-30">退款说明</p>
+					<div class="surrender-explain m-t-15">
+						<p class="lh20">
+							1、退款金额：按被保险人分摊保费退保
+							<br/> 2、退款方式：原路返回
+							<br/> 3、退款时效：我们会在3-5个工作日完成退款
+						</p>
+					</div>
+					<div class="form-read-clause tac m-t-35">
+						<span class="ui-checkbox ui-check-click m-r-5 ui-rem-checkbox j-checkbox">
+							<i class="fcw icon-hook f20 lh9"></i>
+						</span>
+						<label for="xeiyi" class="input-label vm f12">
+							<span>我已认真阅读并同意</span>
+							<a class="diy_mould-color j-policies" href="javascript:;">齐欣退保法律声明</a>
+							<span></span>
+						</label>
+					</div>
+					<a class="btn-1 surrender-btn2 diy_mould-background-2 j-confirm-submit">提交</a>
+				</div>
+				<!-- 退保结果 -->
+				<div class="hidden" data-step-con="3">
+					<div class="fcsc form-group-cue">
+						<i class="icon-cue vm m-r-5">&#xe606;</i>
+						<span class="vm">您的退保申请已经成功提交，我们会在3-5个工作日内为您退款</span>
+					</div>
+					<p class="m-t-30">退保信息</p>
+					<div class="ui-table-wrap m-t-15">
+						<table class="j-complete-table">
+							<thead>
+								<tr>
+									<th>投保单号</th>
+									<th class="tac">保障期限</th>
+									<th class="tac">投保时间</th>
+									<th>被保险人</th>
+									<th>产品名称</th>
+									<th class="tac">保险公司</th>
+									<th class="tac">保费</th>
+									<th class="tac">状态</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="hidden">
+					<div class="tac surrender-fail lh20">
+						<i class="icon-cue fcsc">&#xe6df;</i>
+						<br/> 退保失败
+						<br/> 请联系齐欣客服协助处理
+						<br/> 客服热线:400-678-8169
+						<br/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<input type="hidden" id="insure" value="{{JSON.stringify(insure)}}">
+<input type="hidden" id="errTimes" value="{{errTimes}}">
+<input type="hidden" id="isCaptcha" value="{{isCaptcha}}">
+<input type="hidden" id="smsToken" value="{{smsToken}}">
+<input type="hidden" id="timer" value="{{timer}}"> {% include "../_footer.html" %} {% endblock %} {% block script %}
+<script src="{{ resDomain }}/js/prod/retreat.js" type="text/javascript"></script>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "_parent.html" %}
+
+{% block link %}
+<link rel="stylesheet" href="{{ resDomain }}/css/provision.css"/>
+{% endblock link %}
+
+{% block body %}
+
+<!-- main begin -->
+<div class="main ui-layout ui-category-table">
+    <div class="ui-content">
+        <div class="category-title clearfix">
+            <h3><img src="{{bigLogoImg}}" class="ui-mr20" width="139" />{{productName}}——{{planName}}</h3>
+            <div class="category-btn">
+                <a class="ui-submit-btn diy-background" href="detail?prodId={{productId}}&planId={{planId}}" target="_self">产品详情</a>
+            </div>
+        </div>
+        <!-- 主条款 -->
+        <div class="txlist_tx">
+            <ul class="ui-mb20">
+                <p>主条款</p>
+                {% for provision in masterProvisions%}
+                <li>
+                    <span>
+                        <a href="./provision/detail-{{provision.id}}.html" class="ui-mr30" target="_blank"><i class="ui-icons icons-search"></i>查看</a>
+                        <a href="{{provision.attachmentUrl}}" target="_blank"><i class="ui-icons icons-download2"></i>下载</a>
+                    </span>
+                    <b>
+                        <a href="./provision/detail-{{provision.id}}.html" target="_blank">{{provision.title}}</a>
+                    </b>
+                </li>
+                {%endfor%}
+
+            </ul>
+            {%if additionalProvision and additionalProvision.length>0%}
+            <!-- 附加条款 -->
+            <ul>
+                <p>附加条款</p>
+                {%for provision in additionalProvision%}
+                <li>
+                    <span>
+                        <a href="./provision/detail-{{provision.id}}.html" class="ui-mr30" target="_blank"><i class="ui-icons icons-search"></i>查看</a>
+                        <a href="{{provision.attachmentUrl}}"><i class="ui-icons icons-download2"></i>下载</a>
+                    </span>
+                    <b>
+                        <a href="./provision/detail-{{provision.id}}.html" target="_blank">{{provision.title}}</a>
+                    </b>
+                </li>
+                {%endfor%}
+
+            </ul>
+            {%endif%}
+        </div>
+    </div>
+</div>
+<!-- main end -->
+
+<!-- 关闭页面按钮 begin -->
+<div class="ui-close-page">
+    <a href="javascript:window.close();" class="js-close"><i class="ui-icons icons-close"></i>关闭页面</a>
+</div>
+<!-- 关闭页面按钮 end -->
+
+{% endblock %}
+
+{% block script %}
+    {% include "./_merak_sdk.html" %}
+{% endblock %}

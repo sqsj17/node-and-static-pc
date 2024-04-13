@@ -1,0 +1,40 @@
+{% extends "_parent.html" %}
+
+{% block link %}
+<link rel="stylesheet" href="{{ resDomain }}/css/provision.css"/>
+{% endblock link %}
+
+{% block body %}
+<!-- main begin -->
+<div class="main ui-layout ui-category-table">
+    <div class="ui-content">
+        <div class="category-title clearfix">
+            <h3><img src="{{bigLogoImg}}" class="ui-mr20" width="139" />{{productName}}——{{planName}}  </h3>
+        </div>
+        <!-- 主条款 -->
+        <div class="txlist_tx">
+            <ul class="ui-mb20">
+                <p>保险金赔付比例</p>
+                {% for companyMaterial in companyMaterials%}
+                <li>
+                        <span>
+                            <a href="claim-{{ productId }}-{{ planId }}-{{companyMaterial.id}}.html" class="ui-mr30" target="_blank"><i class="ui-icons icons-search"></i>查看</a>
+                            <a href="{{companyMaterial.attachmentUrl}}" target="_blank"><i class="ui-icons icons-download2"></i>下载</a>
+                        </span>
+                    <b><a href="claim-{{ productId }}-{{ planId }}-{{companyMaterial.id}}.html" target="_blank">{{companyMaterial.title}}</a></b>
+                </li>
+                {%endfor%}
+
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- main end -->
+
+<!-- 关闭页面按钮 begin -->
+<div class="ui-close-page">
+    <a href="javascript:window.close();" class="js-close"><i class="ui-icons icons-close"></i>关闭页面</a>
+</div>
+<!-- 关闭页面按钮 end -->
+
+{% endblock %}

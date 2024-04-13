@@ -1,0 +1,81 @@
+{% if insurantList.length > 0 %}
+<div class="detail-item bgfw p20 m-t-10">
+    <div class="heading {{'no-border' if key == 20 or key == 30 else ''}}">
+			{% if (key == 10) %}
+			{{module.name}}
+			{% elif (key == 20) %}
+			被保险人信息
+			{% elif (key == 30) %}
+				{% if insure.insurantList.length > 1 %}
+					“{{insurant.cName}}”受益人信息
+				{% else %}
+					受益人信息
+				{% endif %}
+			{% endif %}
+    </div>
+    <div class="{{'detail-item-list' if monoInsurant else ''}} clearfix">
+    {% for insurant in insurantList %}
+        {% if key == 20 %}
+            <ul class="ul-list item-table {{'mono' if monoInsurant else ''}}">
+                <li class="item-heading">
+                    <span class="name">被保险人（{{loop.index}}）</span>
+                    <span class="fr">保单号：{{ insurant.policyCompanyNum | encryptInfo('insureNum') if isEncrypt else insurant.policyCompanyNum}}</span>
+                </li>
+
+                {% if monoApplication %} {#如果是多人投保 展示投保人#}
+                <li>
+                    <span class="name">投保人: </span>
+                    <span>{{applicantList[loop.index - 1].cName | encryptInfo('cName') if isEncrypt else applicantList[loop.index - 1].cName}}</span>
+                </li>
+                {% endif %}
+
+                {% for item in module.productAttrs %}
+                {% if item.attribute.keyCode != 'applicantType' or isHzOwner != 1 %}
+                <li>
+                    <span class="name">{{item.attribute.name}}: </span>
+                    <span>{% include "product/order_detail_people_attr.html" %}</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+
+                {% if newInfo.isApplicantInsurant != 1%}
+                <li>
+                    <span class="name">价格</span>
+                    <span>{{ insurant.memberSinglePrice | plutoPrice(2)}}</span>
+                </li>
+                {% endif%}
+            </ul>
+
+
+        {% elif key == 30 %}
+            <ul class="ul-list item-table {{'mono' if insurantList.length > 1 else ''}}">
+					{% if insurantList.length > 1 %}
+					<li class="item-heading">
+                    <span class="name">受益人（{{loop.index}}）</span>
+                </li>
+					{% endif %}
+                {% for item in module.productAttrs %}
+                {% if item.attribute.keyCode != 'applicantType' or isHzOwner != 1 %}
+                <li>
+                    <span class="name">{{item.attribute.name}}: </span>
+                    <span>{% include "product/order_detail_people_attr.html" %}</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <ul class="ul-list m-t-10">
+                {% for item in module.productAttrs %}
+                {% if item.attribute.keyCode != 'applicantType' or isHzOwner != 1 %}
+                <li>
+                    <span class="name">{{item.attribute.name}}: </span>
+                    <span>{% include "product/order_detail_people_attr.html" %}</span>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>
+{% endif %}

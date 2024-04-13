@@ -1,0 +1,84 @@
+{% extends "_parent.html" %}
+
+{% block link %}
+<link rel="stylesheet" href="{{resDomain}}/css/order.css"/>
+<link rel="stylesheet" href="{{resDomain}}/js/plugin/webuploader/webuploader.css"/>
+{% endblock link %}
+
+{% block body %}
+{% include "_header.html" %}
+<input type="hidden" id="partnerId" value="{{partnerId}}"/>
+<input type="hidden" id="pcBuyType" value="{{pcBuyType}}"/>
+<input type="hidden" id="oepnReservationEntrance" value="{{partnerConfig.oepnReservationEntrance}}"/>
+<input type="hidden" id="prodId" value="{{prodId}}"/>
+<input type="hidden" id="planId" value="{{planId}}"/>
+<input type="hidden" id="cuid" value="{{cuid}}"/>
+<div class="insure-step-page  pt20 pb20 f14" style="background: #f0f0f0;"><!--详情页面标识-->
+    <div class="layout clearfix pt30 pb30">
+        <div class="insure-step-primary">
+            <div class="insure-step-container ">
+                <div class="insure-write-tip">为了保障您的权益，请填写真实有效的信息。您填写的内容仅供投保使用，对于您的信息我们会严格保密。</div>
+                <div class="insure-step-body p30 bgfw">
+                    <form id="signupForm" method="post" class="form-horizontal" action="">
+                        <div>
+                            {{health.templateDescForPc| safe }}
+                        </div>
+
+                    </form>
+                </div>
+                <!--health-body end-->
+            </div>
+        </div>
+        <div class="insure-step-secondary">
+            <div class="secondary-hot-product bgfw">
+                <div class="secondary-hot-product-head">
+                    <a class="company-logo">
+                        <img class="lazy" data-original="{{basicInfo.data.bigLogoImg}}" height="45">
+                    </a>
+                    <h2 class="hot-product-title mt35 f18"><a href="detail?prodId={{ prodId }}&planId={{ planId }}&{{ "cuid="+cuid if cuid else "" }}">{{basicInfo.data.name}}</a></h2>
+                </div>
+                <div class="secondary-hot-product-body">
+                </div>
+                <!--secondary-hot-product-body end-->
+                <div class="secondary-hot-product-foot">
+                    <div class="hz-list lh20">
+                        <div class="hz-list-item">
+                            <span class="hz-list-title">价格</span>
+
+                            <p class="hz-list-content tar price">
+                            </p>
+                        </div>
+                        <div class="hz-list-item">
+                            <span class="hz-list-title">份数</span>
+
+                            <p class="hz-list-content tar">1</p>
+                        </div>
+                    </div>
+                    <div class="mt15 hot-product-price">
+                        <p class="primary-color diy-font-color fr">
+                            ￥ <span class="product-price total-price f36"><i></i></span>
+                        </p>
+                        <span>合计</span>
+                    </div>
+                    <!--hot-product-price end-->
+                </div>
+                <!--secondary-hot-product-foot end-->
+            </div>
+            <!--secondary-hot-product end-->
+        </div>
+        <!--insure-step-secondary end-->
+    </div>
+</div>
+<form id="form" method="post">
+    <input type="hidden" name="trialGenes" id="trialGenes" value="{{trialGenes}}"/>
+    <input type="hidden" name="notifyAnswerId" id="notifyAnswerId"/>
+</form>
+
+<!--detail-page end-->
+{% include "../_copyright.html" %}
+{% endblock %}
+{% block script %}
+<script src="{{resDomain}}/js/base64.js" type="text/javascript"></script>
+<script src="{{resDomain}}/js/prod/healthInform.js" type="text/javascript"></script>
+{% include "./_merak_sdk.html" %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "express": "^4.18.2"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "chokidar": "^3.5.3",
+    "config": "^3.3.9",
+    "express-minify-html": "^0.12.0",
+    "ioredis": "^5.3.2",
+    "lodash": "^4.17.21",
+    "lru-cache": "^10.1.0",
+    "nunjucks": "^3.2.4"
+  }
+}

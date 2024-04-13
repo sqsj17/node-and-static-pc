@@ -1,0 +1,126 @@
+{% extends "_parent.html" %}
+
+{% block title %}
+    <title>职业类别 - 慧择保险网</title>
+{% endblock title %}
+
+{% block link %}
+    <link rel="stylesheet" href="{{ resDomain }}/css/detail.css"/>
+{% endblock link %}
+
+{% block body %}
+
+    {% include "_header.html" %}
+
+    <div class="detail-job-search pt20 pb20 f14 bgf0">
+        <div class="layout pb40 clearfix">
+            <div class="job-search-content p30 bgfw">
+                <div class="job-search-head">
+                    <div class="fr"><img class="lazy" data-original="{{ data.bigLogoImg }}" height="45"></div>
+                    <h2 class="f30 product-title">
+                      <a href="/apps/cps/{{ partnerDomain }}/product/detail?prodId={{ product.productId }}&planId={{ product.planId }}" target="_blank">{{ data.name }}</a>
+                    </h2>
+                </div>
+                <div class="pt25 pb20 bor-bottom">
+                    <h3 class="fb">职业类别</h3>
+                </div>
+
+                <div class="job-search-form mb30 mt20">
+                    <input placeholder="快速查看我的职业是否可承保" type="text" class="job-search-input input-text" id="searchJob"/>
+                    <a class="job-search-button hz-button hz-button-primary diy-background" href="javascript:;"
+                       id="jobSearchBtn">搜索</a>
+                </div>
+                <h3 class="mt10 mb10" id="searchTipTitle">本产品职业类别表如下：</h3>
+
+                <p class="fc6 f12 mb20" style="display: none" id="searchTotal">
+                    共查询到<span class="jobs-count" id="searchNum">0</span>个与<strong class="highlight"
+                                                                                  id="searchKeywords"></strong>相关的职业，见下表黄色文字部分
+                </p>
+
+                <p class="fc6 f12" style="margin-bottom: 20px;display: none" id="searchEmpty">
+                    对不起，没有找到与<strong class="highlight search-keywords"></strong>相关的职业
+                </p>
+                {% if jobList[0].levelCount == 4 %}
+                    {% set flag = 4 %}
+                {% else %}
+                    {% set flag = 3 %}
+                {% endif %}
+                <table class="hz-table hz-table-bordered" id="jobDetails">
+                    <thead>
+                    <tr>
+                        <th class="tal">职业大分类</th>
+                        <th class="tal">职业中分类</th>
+                        <th class="tal">职业小分类</th>
+                        {% if flag == 4 %}
+                            <th class="tal">职业细分类</th>
+                        {% endif %}
+                        <th style="width: 100px">职业等级</th>
+                        <th style="width: 100px">是否承保</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for item in jobList %}
+                        {% if flag == 4 %}
+                            {% set isFirst = true %}
+                            {% for subItem in item.childNodes %}
+                                {% set isSubFirst = true %}
+                                {% for subSubItem in subItem.childNodes %}
+                                    {% for subSubSubItem in subSubItem.childNodes %}
+                                        <tr>
+                                            {% if isFirst %}
+                                                {% set isFirst = false %}
+                                                <td rowspan="{{ item.leafCount }}">{{ item.name }}</td>
+                                            {% endif %}
+                                            {% if isSubFirst %}
+                                                {% set isSubFirst = false %}
+                                                <td rowspan="{{ subItem.leafCount }}">{{ subItem.name }}</td>
+                                            {% endif %}
+                                            {% if loop.first %}
+                                                <td rowspan="{{ subSubItem.leafCount }}">{{ subSubItem.name }}</td>
+                                            {% endif %}
+                                            <td>{{ subSubSubItem.name }}</td>
+                                            <td style="text-align: center">{{ subSubSubItem.level }}</td>
+                                            <td style="text-align: center">{{ "是" if subSubSubItem.canInsure else "否" }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            {% set isFirst = true %}
+                            {% for subItem in item.childNodes %}
+                                {% set val = 0 %}
+                                {% for subItem in item.childNodes %}
+                                    {% set val = val + subItem.childNodes.length %}
+                                {% endfor %}
+                                {% for subSubItem in subItem.childNodes %}
+                                    <tr>
+                                        {% if isFirst %}
+                                            {% set isFirst = false %}
+                                            <td rowspan="{{ val }}">{{ item.name }}</td>
+                                        {% endif %}
+                                        {% if loop.first %}
+                                            <td rowspan="{{ subItem.childNodes.length }}">{{ subItem.name }}</td>
+                                        {% endif %}
+                                        <td>{{ subSubItem.name }}</td>
+                                        <td style="text-align: center">{{ subSubItem.level }}</td>
+                                        <td style="text-align: center">{{ "是" if subSubItem.canInsure else "否" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% include "../_copyright.html" %}
+
+{% endblock %}
+{% block script %}
+    <script src="{{ resDomain }}/js/prod/job.js" type="text/javascript"></script>
+    {% include "./_merak_sdk.html" %}
+{% endblock %}

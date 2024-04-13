@@ -1,0 +1,118 @@
+{% for item in module.productAttrs %}
+<li>
+    <span class="name" data-attr-key="{{item.attribute.keyCode}}">{{item.attribute.name}}:</span>
+    <span>
+        {% set val = '' %}
+        {% for attr in insure.attributeList %}
+            {% if val == '' %}
+                {% if (attr.key == 'ContinuePayBank' and item.attribute.keyCode=='bank' )%}
+                    {% set val = attr.value %}
+                {% elif (attr.key == 'ContinuePayAccountType' and item.attribute.keyCode=='accountType' )%}
+                    {% set val = attr.value %}
+                {% elif (attr.key == 'ContinuePayBranchBank' and item.attribute.keyCode=='branchBank' )%}
+                    {% set val = attr.value %}
+                {% elif (attr.key == 'ContinuePayName' and item.attribute.keyCode=='cardOwner' )%}
+                    {% set val = attr.value %}
+                {% elif ((attr.key == 'ContinuePayAccount') and item.attribute.keyCode=='payAccount' )%}
+                    {% set val = attr.value %}
+
+                {% elif (attr.key == 'WithholdPayAccountType' and item.attribute.keyCode=='accountType' )%}
+                    {% set val = attr.value %}
+                {% elif (attr.key == 'BackPayAccountType' and item.attribute.keyCode=='accountType' )%}
+                    {% set val = attr.value %}
+                {% elif (attr.key == 'RenewalPayAccountType' and item.attribute.keyCode=='accountType' )%}
+
+                {% elif (((attr.key == 'ContinuePayBank' and module.id == 104)
+                        or (attr.key == 'WithholdPayBank' and module.id == 105)
+                        or (attr.key == 'BackPayBank' and module.id == 108)
+                        or (attr.key == 'RenewalPayBank' and module.id == 107)) and item.attribute.keyCode=='bank' )%}
+                    {% set val = attr.value %}
+                {% elif (((attr.key == 'ContinuePayName' and module.id == 104)
+                        or (attr.key == 'WithholdPayName' and module.id == 105)
+                        or (attr.key == 'BackPayName' and module.id == 108)
+                        or (attr.key == 'RenewalPayName' and module.id == 107)) and item.attribute.keyCode=='cardOwner' )%}
+                    {% set val = attr.value %}
+                {% elif (((attr.key == 'ContinuePayAccount' and module.id == 104)
+                        or (attr.key == 'WithholdPayAccount' and module.id == 105)
+                        or (attr.key == 'BackPayAccount' and module.id == 108)
+                        or (attr.key == 'RenewalPayAccount' and module.id == 107)) and item.attribute.keyCode=='payAccount' )%}
+                    {% set val = attr.value %}
+                {% elif (((attr.key == 'ContinuePayBranchBank' and module.id == 104)
+                    or (attr.key == 'WithholdPayBranchBank' and module.id == 105)
+                    or (attr.key == 'BackPayBranchBank' and module.id == 108)
+                    or (attr.key == 'RenewalPayBranchBank' and module.id == 107)) and item.attribute.keyCode=='branchBank' )%}
+                    {% set val = attr.value %}
+                {% elif ((attr.key == 'ContinuePaybankAddressProvinceText' and module.id == 104) and item.attribute.keyCode=='bankAddress' )%}
+                    {% set val = attr.value %}
+                    {% for subAttr in insure.attributeList %}
+                        {% if subAttr.key == 'ContinuePaybankAddressCityText' and module.id == 104 %}
+                            {% set val = val + '-' + subAttr.value %}
+                        {% endif %}
+                    {% endfor %}
+                    {% for subAttr in insure.attributeList %}
+                        {% if subAttr.key == 'ContinuePaybankAddressAreaText' and module.id == 104%}
+                            {% set val = val + '-' + subAttr.value %}
+                        {% endif %}
+                    {% endfor %}
+                {% elif ((attr.key == 'WithholdPaybankAddressProvinceText' and module.id == 105) and item.attribute.keyCode=='bankAddress' )%}
+                    {% set val = attr.value %}
+                    {% for subAttr in insure.attributeList %}
+                        {% if subAttr.key == 'WithholdPaybankAddressCityText' and module.id == 105 %}
+                            {% set val = val + '-' + subAttr.value %}
+                        {% endif %}
+                    {% endfor %}
+                    {% for subAttr in insure.attributeList %}
+                        {% if subAttr.key == 'WithholdPaybankAddressAreaText' and module.id == 105 %}
+                            {% set val = val + '-' + subAttr.value %}
+                        {% endif %}
+                    {% endfor %}
+                {% elif ((attr.key == 'BackPaybankAddressProvinceText' and module.id == 108) and item.attribute.keyCode=='bankAddress' )%}
+                    {% set val = attr.value %}
+                    {% for subAttr in insure.attributeList %}
+                        {% if subAttr.key == 'BackPaybankAddressCityText' and module.id == 108 %}
+                            {% set val = val + '-' + subAttr.value %}
+                        {% endif %}
+                    {% endfor %}
+                {% for subAttr in insure.attributeList %}
+                        {% if subAttr.key == 'BackPaybankAddressAreaText' and module.id == 108 %}
+                            {% set val = val + '-' + subAttr.value %}
+                        {% endif %}
+                    {% endfor %}
+                {% elif ((attr.key == 'RenewalPaybankAddressProvinceText' and module.id == 107) and item.attribute.keyCode=='bankAddress' )%}
+                    {% set val = attr.value %}
+                    {% for subAttr in insure.attributeList %}
+                        {% if subAttr.key == 'RenewalPaybankAddressCityText' and module.id == 107 %}
+                            {% set val = val + '-' + subAttr.value %}
+                        {% endif %}
+                    {% endfor %}
+                    {% for subAttr in insure.attributeList %}
+                        {% if subAttr.key == 'RenewalPaybankAddressAreaText' and module.id == 107 %}
+                            {% set val = val + '-' + subAttr.value %}
+                        {% endif %}
+                    {% endfor %}
+                {% elif (attr.key == 'RenewalPayBranchBankName' and item.attribute.keyCode=='bankBranch' )%}
+                    {% set val = attr.value %}
+                {% elif (attr.key == 'propertyAddressUserInfo' and item.attribute.keyCode=='propertyAddress' )%}
+                    {% set val = attr.value %}
+                {% elif (attr.key == 'ReceiverProvinceAndCity' and attr.key == item.attribute.keyCode )%}
+                    {%for subAttr in insure.attributeList %}
+                        {% if subAttr.key == 'ReceiverProvinceAndCityText' and module.id == 107 %}
+                            {% set val =  subAttr.value %}
+                        {% endif %}
+                    {% endfor %}
+                {% elif (attr.key == item.attribute.keyCode )%}
+                    {% set val = attr.value %}
+                {% endif%}
+                {% if item.attribute.type == 0 or item.attribute.type == 9 %}
+                    {% for subItem in item.attribute.values %}
+                        {% if (subItem.controlValue==val) %}
+                            {% set val = subItem.value %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {{ val | encryptInfo(item.attribute.keyCode) if isEncrypt else val }}
+            {% endif %}
+        {% endfor %}
+    </span>
+</li>
+{% endfor %}

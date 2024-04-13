@@ -1,0 +1,111 @@
+{% extends "_parent.html" %}
+
+{% block link %}
+<link rel="stylesheet" href="{{resDomain}}/css/order.css"/>
+<link rel="stylesheet" href="{{resDomain}}/css/health.css"/>
+<link rel="stylesheet" href="{{resDomain}}/js/plugin/webuploader/webuploader.css"/>
+<link rel="stylesheet" href="{{ resDomain }}/css/pay.css"/>
+<link rel="stylesheet" href="{{ resDomain }}/js/plugin/layer/skin/layer.css">
+{% endblock link %}
+
+{% block body %}
+{% include "_header.html" %}
+<input type="hidden" id="partnerId" value="{{partnerId}}"/>
+<input type="hidden" id="prodId" value="{{prodId}}"/>
+<input type="hidden" id="planId" value="{{planId}}"/>
+<input type="hidden" id="bsicProductId" value="{{bsicProductId}}"/>
+<input type="hidden" id="cuid" value="{{cuid}}"/>
+<input type="hidden" id="healthInformWebId" value="{{healthInformWebId}}"/>
+<input type="hidden" id="encryptInsureNum" value="{{encryptInsureNum}}">
+<input type="hidden" id="emailUnderwriting" value="{{emailUnderwriting}}">
+<input type="hidden" id="productJumpConfigCheck" value="{{productJumpConfigCheck}}">
+<input type="hidden" id="adaptQuestionData" value="{{adaptQuestionString}}">
+<div class="insure-step-page  pt20 pb20 f14" style="background: #f0f0f0;"><!--详情页面标识-->
+    <div class="layout clearfix pt30 pb30">
+        <div class="insure-step-primary">
+            <div class="insure-step-container ">
+                <div class="health-wrap {% if adaptQuestionData and adaptQuestionData.templates and adaptQuestionData.templates.length %}none{% endif %}">
+                    <div class="insure-write-tip">为了保障您的权益，请填写真实有效的信息。您填写的内容仅供投保使用，对于您的信息我们会严格保密。</div>
+                    <div class="insure-step-body p30 bgfw">
+                        <div class="health-inform" id="healthyQuestion">
+    
+                        </div>
+                    </div>
+                </div>
+                {% if adaptQuestionData and adaptQuestionData.templates and adaptQuestionData.templates.length %}
+                <div class="adapt-question-wrap">
+                    <div id="adaptQuestion"></div>
+                    <div class="adapt-question-btn">
+                        <button class="diy-background js-adapt-question-btn">提交</button>
+                    </div>
+                </div>
+                {% endif %}
+                <!--health-body end-->
+            </div>
+        </div>
+        <div class="insure-step-secondary">
+            <div class="secondary-hot-product bgfw">
+                <div class="secondary-hot-product-head">
+                    <a class="company-logo">
+                        <img class="lazy" data-original="{{basicInfo.data.bigLogoImg}}" height="45">
+                    </a>
+                    <h2 class="hot-product-title mt35 f18"><a href="detail?prodId={{ prodId }}&planId={{ planId }}&{{ "cuid="+cuid if cuid else "" }}">{{basicInfo.data.name}}</a></h2>
+                </div>
+                <div class="secondary-hot-product-body">
+                </div>
+                <!--secondary-hot-product-body end-->
+                <div class="secondary-hot-product-foot">
+                    <div class="monthPay none">
+                        <div class="pt10">
+                            <p class="primary-color diy-font-color fr">
+                                ￥ <span class="product-price total-price f20"><i></i></span>
+                            </p>
+                            <span class="fc3 f14">首期：</span>
+                        </div>
+                        <div class="pt10">
+                            <p class="primary-color diy-font-color fr " style="text-align: right;">
+                                ￥ <span class="next-month-product-price  f20"><i></i></span>
+                                <!-- <span class="iconfont cursor-pointer fc9 termTrialDetail" style="margin-right: -10px;">&#xe60a;</span> -->
+                            </p>
+                            <span class="fc3 f14">续期：</span>
+                        </div>
+                    </div>
+                    <div class="mt15 hot-product-price yearPay">
+                        {% if(isFree == 1) %}
+                        <p class="fr">
+                            <span class="is-free-styel f18" style="color:#FF5B00">限时免费</span>
+                        </p>
+                        {%else%}
+                        <p class="primary-color diy-font-color fr price-block">
+                            ￥ <span class="product-price total-price f28">￥<i></i></span>
+                         </p>
+                        {%endif%}
+                        <span class="total-mark">合计</span>
+                    </div>
+                    <!--hot-product-price end-->
+                </div>
+                <!--secondary-hot-product-foot end-->
+            </div>
+            <!--secondary-hot-product end-->
+        </div>
+        <!--insure-step-secondary end-->
+    </div>
+</div>
+<form id="form" method="post">
+    <input type="hidden" name="trialGenes" id="trialGenes" value="{{trialGenes}}"/>
+    <input type="hidden" name="notifyAnswerId" id="notifyAnswerId"/>
+    <input type="hidden" name="healthInfoToAI" id="healthInfoToAI"/>
+    <input type="hidden" name="healthInformData" id="healthInformData"/>
+</form>
+<input type="hidden" id="pcBuyType" value="{{pcBuyType}}">
+<input type="hidden" id="oepnReservationEntrance" value="{{partnerConfig.oepnReservationEntrance}}">
+<input type="hidden" id="reservationState" value="{{partnerConfig.reservationState}}">
+<input type="hidden" id="nonstandardCheckType" value="{{nonstandardCheckType}}">
+<!--detail-page end-->
+{% include "../_copyright.html" %}
+{% endblock %}
+{% block script %}
+<script src="https://static.huizecdn.com/js/base/health/drop-down.js"></script>
+<script type="text/javascript" src="{{ resDomain }}/dist/js/health.js"></script>
+{% include "./_merak_sdk.html" %}
+{% endblock %}

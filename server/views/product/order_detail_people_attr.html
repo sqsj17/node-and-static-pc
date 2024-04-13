@@ -1,0 +1,90 @@
+{% if item.attribute.keyCode=='sex' %}
+{{ "女" if insurant[item.attribute.keyCode]==0 else "男" }}
+{% elif item.attribute.keyCode == 'relationInsureInsurant' %}
+{{insurant.relationName}}
+{% elif item.attribute.keyCode == 'relationInsureBeneficiary' %}
+{{insurant.relationName}}
+{% elif item.attribute.keyCode == 'buyCount' %}
+{{insurant.buyAmount}}
+{% elif item.attribute.keyCode == 'coverageAreaName' %}
+{{insurant.provinceName}}-{{insurant.cityText}}-{{insurant.areaText}}
+{% elif item.attribute.keyCode == 'haveMedical' %}
+{{ "有" if insurant[item.attribute.keyCode] else "无" }}
+{% elif item.attribute.keyCode === 'haveSocialSecurity' %}
+{{ "有" if insurant[item.attribute.keyCode] else "无" }}
+{% elif item.attribute.keyCode == 'marryState' %}
+{{ "已婚" if insurant[item.attribute.keyCode]==1 else "未婚" }}
+{% elif item.attribute.keyCode == 'proportion' %}
+{{ insurant[item.attribute.keyCode]/100 }}%
+{% elif module.id == 10 and item.attribute.keyCode == 'height' %}
+    {% for attr in insure.attributeList %}
+        {% if attr.key == 'InsureHeight' %}
+            {{ attr.value }}
+        {% endif %}
+    {% endfor %}
+{% elif module.id == 10 and item.attribute.keyCode == 'weight' %}
+    {% for attr in insure.attributeList %}
+        {% if attr.key == 'InsureWeight' %}
+            {{ attr.value }}
+        {% endif %}
+    {% endfor %}
+{% elif module.id==10 and item.attribute.keyCode == 'workCompanyName'  %}
+    {% for attr in insure.attributeList %}
+        {% if attr.key == 'workCompanyName' %}
+            {{ attr.value }}
+        {% endif %}
+    {% endfor %}
+{% elif module.id==10 and item.attribute.keyCode == 'workEmail'  %}
+    {% for attr in insure.attributeList %}
+        {% if attr.key == 'workEmail' %}
+            {{ attr.value }}
+        {% endif %}
+    {% endfor %}
+{% elif module.id==10 and item.attribute.keyCode == 'relatedPersonHouse'  %}
+    {% for attr in insure.attributeList %}
+        {% if attr.key == 'relatedPersonHouse' %}
+            {% if attr.value == 0 %}
+                房主
+                {% elif  attr.value ==1 %}
+                房主直系亲属
+                {% elif attr.value ==2 %}
+                租户
+            {% else%}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% elif module.id==10 and item.attribute.keyCode == 'fiscalResidentIdentity' %}
+    {% for attr in insure.attributeList %}
+        {% if attr.key == 'fiscalResidentIdentity' and attr.typeId==10%}
+            {% if attr.value == 1 %}
+                中国税收居民
+                {% elif  attr.value ==2 %}
+                非居民
+                {% elif attr.value ==3 %}
+                既是中国税收居民又是其他国家（地区）税收居民
+            {% else%}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% elif module.id==10 and item.attribute.keyCode == 'incomeSource' %}
+    {% for attr in insure.attributeList %}
+        {% if attr.key == 'incomeSource' %}
+            {% for attrValue in item.attribute.values %}
+                {% if attrValue.controlValue == attr.value %}
+                    {{ attrValue.value }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+{% elif module.id == 20 and item.attribute.keyCode == 'fiscalResidentIdentity' %}
+    {% if insurant[item.attribute.keyCode] == 1 %}
+        中国税收居民
+        {% elif insurant[item.attribute.keyCode] ==2 %}
+        非居民
+        {% elif insurant[item.attribute.keyCode] ==3 %}
+        既是中国税收居民又是其他国家（地区）税收居民
+    {% else%}
+    {% endif %}
+{% else %}
+    {{ insurant[item.attribute.keyCode] | encryptInfo(item.attribute.keyCode) if isEncrypt else insurant[item.attribute.keyCode]}}
+{% endif %}

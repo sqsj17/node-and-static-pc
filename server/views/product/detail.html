@@ -1,0 +1,654 @@
+{% extends "_parent.html" %}
+{% block link %}
+<link rel="stylesheet" href="{{ resDomain }}/css/detail.css?145335656" />
+<link rel="stylesheet" href="{{ resDomain }}/css/main.css" />
+<link rel="stylesheet" href="{{ resDomain }}/js/plugin/layer/skin/layer.css">
+<link rel="stylesheet" href="{{ resDomain }}/css/pay.css" />
+{% endblock link %}
+
+{% block hidden_form %}
+<input type="hidden" id="partnerId" value="{{ partnerId }}" />
+<input type="hidden" id="prodId" value="{{ prodId }}" />
+<input type="hidden" id="planId" value="{{ planId }}" />
+<input type="hidden" id="product" value="{{ product }}" />
+<input type="hidden" id="cuid" value="{{cuid}}" />
+<input type="hidden" id="isfree" value="{{data.isfree}}">
+<input type="hidden" id="productBasicInfo" value="{{JSON.stringify(productBasicInfo)}}">
+<input type="hidden" id ="productTakeOffInfo" value="{{JSON.stringify(productTakeOffInfo)}}" />
+{% endblock %}
+{% block header %}
+{% endblock %}
+{% block body %}
+
+<div class="detail-page f14" style="background: #f5f5f5;">
+    <!--详情页面标识-->
+    <!--置顶在detail-tab-wrap添加class fixed-detail-tab-wrap-->
+
+    {% block detail_nav %}
+    {% endblock %}
+    <!---detail-tab-wrap end-->
+    <!-- 停售倒计时 -->
+    <div class="take-off-container"></div>
+    <!-- 停售倒计时 -->
+    <div class="layout clearfix pt20 pb30">
+        <div class="detail-primary">
+            <div class="detail-tab-container">
+                <!--保障详情-->
+                <div class="detail-pane pb30 pl30">
+                    <div class="detail-ensure-info  clearfix">
+                        <div class="detail-ensure-body">
+                            <div class="pt30">
+                                <div class="detail-ensure-head clearfix mb20 pl30">
+                                    {% block company_logo %}
+                                    <a class="company-logo fr ml40">
+                                        <img class="lazy" data-original="{{ data.bigLogoImg }}" height="45"
+                                            style="display: inline;">
+                                    </a>
+                                    {% endblock %}
+                                    <div class="product-detail-head-info">
+                                        <h2 class="product-title mb5 f26">{{ data.productName
+                                            }}&nbsp;&nbsp;{{data.planName }}</h2>
+                                        <!-- {% if masterProvisions and masterProvisions.length %}
+                                        <div class="detail-head-clause f14 fc9">
+                                            {% for provision in masterProvisions %}
+                                            <p>备案名 : {{provision.title}}</p>
+                                            {% endfor %}
+                                        </div>
+                                        {% endif %} -->
+                                        {% if text.publishSaleName %}
+                                        <div class="detail-head-clause f14 fc9">
+                                            <p>披露名 : {{text.publishSaleName}}</p>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <ul class="detail-ensure-support pl30 fc6 bor-bottom pb15">
+                                    {% for item in text.featureList %}
+                                    {% if item.dataType == 1 %}
+                                    <li class="ensure-support-item">
+                                        <i class="iconfont f20 mr10">
+                                            <span class="diy-font-color">&#xe71e;</span></i>
+                                        {{ item.content | safe}}
+                                    </li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                <!--23:45-00:00不能投次日生效单-->
+                                <p class="insure-off-waring none"><img width="16" height="16"
+                                        src="{{resDomain}}/img/info-circle.svg" alt="">
+                                    <span></span>
+                                </p>
+
+                                <!-- 下架产品推荐位 -->
+                                <div class="js-off-shelf-recommend-wrap"></div>
+
+                                <!--选项操作-->
+                                <div class="detail-ensure-opt mb40 mt30 pl40 pr30">
+                                    <form id="form" name="form" method="post">
+                                        <div id="plan-pannel">
+                                            {% if planList.length > 1 %}
+                                            <dl class="ensure-opt-item clearfix">
+                                                <dt class="ensure-opt-title fl">
+                                                    <strong>方案选择</strong>
+                                                </dt>
+                                                <dd class="ensure-opt-content">
+                                                    {% for planItem in planList %}
+                                                    <a class="filter-tag js-switch-plan {{'filter-active-tag' if planItem.planId == planId else ''}}"
+                                                        data-planid="{{ planItem.planId }}"
+                                                        data-realid="{{ planId }}">{{ planItem.planName }}
+                                                        <i></i>
+                                                    </a>
+                                                    {% endfor %}
+                                                </dd>
+                                            </dl>
+                                            {% endif %}
+                                        </div>
+                                        <input type="hidden" id="trial-genes" name="trialGenes" />
+                                        <input type="hidden" id="healthinformwebid" name="healthinformwebid"
+                                            value="{{ data.healthinformwebid }}" />
+                                        <div id="trial-panel"></div>
+                                        <div class="clearfix monthpay">
+                                        </div>
+                                        <div class="clearfix yearpay">
+                                            <dl class="ensure-opt-item clearfix mt30">
+                                                <dt class="ensure-opt-title fl">
+                                                    <strong>保费</strong>
+                                                </dt>
+                                                <dd class="ensure-opt-content f18">
+                                                    {% if (data.isFree == 1) %}
+                                                    <span class="is-free-style">限时免费</span>
+                                                    {% else %}
+                                                    <span class="product-price" style="float: left">
+                                                        <span class="diy_mould-color">￥
+                                                            <i style="font-size: 28px;"></i></span></span>
+                                                    <span
+                                                        class="fc9 tdt ml15 f14 original-price diy_mould-color hidden">原价￥<i></i>
+                                                    </span>
+                                                    {% if (data.insurePageType == 5 or data.insurePageType == 1 or
+                                                    (data.insurePageType == 6)) %}
+                                                    <a
+                                                        class="f14 mt5 ml20 plan-link diy_mould-color primary-link lookInterestsDemon hidden">查看现金价值演示</a>
+                                                    {% endif %}
+                                                    <a class="f14 mt5 ml20 plan-link diy_mould-color primary-link lookInterestLayer">查看银行限额</a>
+                                                    {% endif %}
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                        <!-- detail-activity -->
+                                        {% block detail_insure_form_end %}
+                                        {% endblock %}
+                                        <div class="ensure-opt-action clearfix p-relative">
+                                            {% include "../_action_button.html" %}
+                                            {% block detail_insure_form_action_end %}
+                                            {% endblock %}
+                                        </div>
+                                        <!-- detail-ensure-operation end-->
+                                    </form>
+                                </div>
+                                <!--detail-ensure-opt end-->
+                            </div>
+                            {% block travel_Ads_end %}
+                            {% endblock %}
+                            <!--权益保障-->
+                            <div class="detail-ensure-protect f14">
+                                <h3 class="f14 pb20 pt20 fb fc6">保障权益</h3>
+                            </div>
+                            <!--detail-ensure-protect end-->
+                            <!--产品解读-->
+                            {% if text.productRead and (text.productRead).trim() != '' %}
+                            <div class="detail-ensure-read pt30 pb30">
+                                <h3 class="f14 pb20 pt20 mb20 fb fc6 bor-bottom">产品解读</h3>
+                                <div class="pr30 clearfix">
+                                    {{ text.productRead| safe }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            <!--detail-pane end-->
+                            <!--权利 去掉-->
+                            {% if false %}
+                            <div class="detail-ensure-protect detail-ensure-rescue detail-ensure-right mt40 ">
+                                <ul class="ensure-protect-list">
+                                    <li class="ensure-protect-item ensure-protect-head">
+                                        <h4 class="protect-item-title diy-f14-bold">您拥有的权利</h4>
+                                    </li>
+                                </ul>
+                                <ul class="rescue-service-list clearfix">
+
+                                    {% for droit in text.droitLst %}
+                                    <li class="rescue-service-item">
+                                        <i class="iconfont icon-item f24">
+                                            <span class="diy-font-color">&#xe702;</span>
+                                        </i>
+                                        <dl>
+                                            <dt>
+                                                {{ droit.name|safe }}
+                                            </dt>
+                                            <dd class="f12 mt10 fc6">
+                                                {{ droit.description|safe }}
+                                            </dd>
+                                        </dl>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <!--detail-ensure-right end-->
+                            {% endif %}
+                        </div>
+                        <!--detail-ensure-body end-->
+
+                    </div>
+                    <!--detail-ensure-info end-->
+                </div>
+                <!--detail-pane end-->
+                <!--产品解读-->
+                {% if text.productRead and (text.productRead).trim() != '' %}
+                <div class="detail-pane pt30 pl30 pb30 fn-hide">
+                    <div class="detail-product-explain detail-typical-case pr30 clearfix">
+                        {{ text.productRead| safe }}
+                    </div>
+                </div>
+                {% endif %}
+                <!--detail-pane end-->
+
+                <!--投保案例-->
+                {% if text.insuranceCase %}
+                <div class="detail-pane pt30 pl30 pb30 fn-hide">
+                    <div class="detail-product-explain detail-typical-case pr30 clearfix">
+                        {{ text.insuranceCase| safe }}
+                    </div>
+                </div>
+                {% endif%}
+                <!--detail-pane end-->
+
+                <!-- 投保须知 -->
+                {% if (text.importantTips and text.importantTips.length) or (text.hzinsTips and text.hzinsTips.length)
+                or (provisionData.masterProvisions and provisionData.masterProvisions.length) or
+                (provisionData.additionalProvision and provisionData.additionalProvision.length)%}
+                <div class="detail-pane pt30 pl30 pb30 detail-ensure-notice">
+                    {% if (text.importantTips and text.importantTips.length) or (text.hzinsTips and
+                    text.hzinsTips.length) %}
+                    <div class="detail-ensure-protect">
+                        <ul class="ensure-protect-list">
+                            <li class="ensure-protect-item ensure-protect-head">
+                                <h4 class="protect-item-title diy-f14-bold">投保须知</h4>
+                            </li>
+                        </ul>
+                        {% if text.importantTips.length %}
+                        <div class="block-table">
+                            <table>
+                                {% for importantTip in text.importantTips %}
+                                <tr>
+                                    <td class="left">{{ importantTip.title }}</td>
+                                    {% if importantTip.tipType == 3 %}
+                                    <td class="right">
+                                        {% if text.productDisplayProvisionVo.pictureRateTable and
+                                        text.productDisplayProvisionVo.pictureRateTable != ''%}
+                                        <a class="diy-font-color"
+                                            href="{{ text.productDisplayProvisionVo.pictureRateTable }}"
+                                            target="_blank">
+                                            费率表
+                                        </a>
+                                        {% endif %}
+                                        {% if text.productDisplayProvisionVo.claimsRatio and
+                                        text.productDisplayProvisionVo.claimsRatio != '' and
+                                        text.productDisplayProvisionVo.claimsRatio != ',,'%}
+                                        <a class="diy-font-color"
+                                            href="claimList-{{ prodId }}-{{ planId }}-{{text.productDisplayProvisionVo.claimsRatio }}.html"
+                                            target="_blank">
+                                            保险金赔付比例
+                                        </a>
+                                        {% endif %}
+                                        {% for linkKey, itemHref in text.tipsLinkMap %}
+                                        {% if linkKey === "客户告知书" %}
+                                        <a class="diy-font-color" href="{{itemHref}}" target="_blank">
+                                            {{linkKey}}
+                                        </a>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% if text.productDisplayProvisionVo.picturePolicy and
+                                        text.productDisplayProvisionVo.picturePolicy != ''%}
+                                        <a class="diy-font-color"
+                                            href="{{ text.productDisplayProvisionVo.picturePolicy }}" target="_blank">
+                                            保单样本
+                                        </a>
+                                        {% endif %}
+                                        {% if text.productDisplayProvisionVo.cashValue and
+                                        text.productDisplayProvisionVo.cashValue !=''%}
+                                        <a class="diy-font-color" href="{{ text.productDisplayProvisionVo.cashValue }}"
+                                            target="_blank">
+                                            现金价值
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                    {% else %}
+                                    <td class="right">{{ importantTip.tips|safe }}</td>
+                                    {% endif %}
+                                </tr>
+
+                                {% endfor %}
+                            </table>
+                        </div>
+                        {% endif %}
+                        {% if text.hzinsTips.length %}
+                        <div class="clearfix notice-more-table">
+                            <p>其余须知：</p>
+                            <ol class="f12">
+                                {% for tips in text.hzinsTips %}
+                                <li>
+                                    <strong>{{ loop.index }}. </strong>{{ tips|safe }}
+                                </li>
+                                {% else %}
+                                暂无内容
+                                {% endfor %}
+                            </ol>
+                        </div>
+                        {% endif %}
+                        <!--notice-content end-->
+                    </div>
+                    {% endif %}
+                    {% if (provisionData.masterProvisions and provisionData.masterProvisions.length) or
+                    (provisionData.additionalProvision and provisionData.additionalProvision.length) %}
+                    <div class="detail-ensure-protect mt30">
+                        <ul class="ensure-protect-list">
+                            <li class="ensure-protect-item ensure-protect-head">
+                                <h4 class="protect-item-title diy-f14-bold">保险条款</h4>
+                            </li>
+                        </ul>
+                        <div class="block-table clause-table">
+                            {% if provisionData.masterProvisions and provisionData.masterProvisions.length %}
+                            <table>
+                                {% for provision in provisionData.masterProvisions %}
+                                {% if loop.first %}
+                                <tr class="title-tr">
+                                    <td class="left">主条款</td>
+                                    <td class="right"></td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td class="left">
+                                        <a href="./provision/detail-{{provision.id}}.html"
+                                            target="_blank">{{provision.title}}</a>
+                                    </td>
+                                    <td class="right">{{provision.recordCode}}{% if provision.recordCode and
+                                        provision.filingCode %}/{% endif %}{{provision.filingCode}}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                            {% endif %}
+                            {% if provisionData.additionalProvision and provisionData.additionalProvision.length %}
+                            <table class="title-tr">
+                                {% for provision in provisionData.additionalProvision %}
+                                {% if loop.first %}
+                                <tr class="title-tr">
+                                    <td class="left">附加条款</td>
+                                    <td class="right"></td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td class="left">
+                                        <a href="./provision/detail-{{provision.id}}.html"
+                                            target="_blank">{{provision.title}}</a>
+                                    </td>
+                                    <td class="right">{{provision.recordCode}}{% if provision.recordCode and
+                                        provision.filingCode %}/{% endif %}{{provision.filingCode}}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                            {% endif %}
+                        </div>
+                        <!--notice-content end-->
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!--detail-ensure-notice end-->
+
+                <!--理赔指引-->
+                <div class="detail-pane pt30 pl30 pb30 fn-hide">
+                    <div class="detail-product-claims pr30">
+                        <div class="product-claims-service">
+                            {% if text.flowLst == null or text.flowLst.length == 0 %}
+                            <div class="claims-service-box">
+                                <ul class="claims-service-tab-menu tac clearfix">
+
+                                    <li class="claims-service-tab-item active">
+                                        <i class="iconfont"></i>
+
+                                        <p class="pt20">报案</p>
+                                    </li>
+
+                                    <li class="claims-service-tab-item claims-service-tab-separator">
+                                        <i class="iconfont"></i>
+                                    </li>
+
+                                    <li class="claims-service-tab-item ">
+                                        <i class="iconfont"></i>
+
+                                        <p class="pt20">提交理赔资料</p>
+                                    </li>
+
+                                    <li class="claims-service-tab-item claims-service-tab-separator">
+                                        <i class="iconfont"></i>
+                                    </li>
+
+                                    <li class="claims-service-tab-item ">
+                                        <i class="iconfont"></i>
+
+                                        <p class="pt20">理赔资料审核</p>
+                                    </li>
+
+                                    <li class="claims-service-tab-item claims-service-tab-separator">
+                                        <i class="iconfont"></i>
+                                    </li>
+
+                                    <li class="claims-service-tab-item ">
+                                        <i class="iconfont"></i>
+
+                                        <p class="pt20">领取赔款</p>
+                                    </li>
+
+                                </ul>
+
+                                <div class="claims-service-tab-container">
+                                    {% block claimsServiceBaoAn %}
+                                    <div class="claims-service-tab-pane ">
+                                        <p>
+                                            您可通过如下方式报案: &nbsp;
+                                        </p>
+                                        <p>
+                                            电话报案:请您致电{{ tel400 }}进行报案
+                                        </p>
+                                    </div>
+                                    {% endblock %}
+
+                                    <div class="claims-service-tab-pane fn-hide">
+                                        <p>
+                                            报案后,我们将会给您发送索赔指引邮件,告知您资料要求、理赔流程及纸质材料的寄送地址。
+                                        </p>
+                                        <p>
+                                            <span
+                                                style="color:#333333;font-family:&quot;line-height:33.6px;background-color:#f6f9fe;">如您不确定现有材料是否符合理赔要求,您可以将所有材料拍照或扫描并发送至claim@huize.com邮箱,我们将会协助您进行影像件预审核。</span>
+                                        </p>
+                                    </div>
+
+                                    <div class="claims-service-tab-pane fn-hide">
+                                        事故责任明确、理赔资料齐全的案件,审核周期为:小马闪赔（如支持）一般为1个工作日,普通类一般为5-7个工作日,重大类一般为20-22个工作日。
+                                    </div>
+
+                                    <div class="claims-service-tab-pane fn-hide">
+                                        理赔款一般在结案后的1-2个工作日可以到账。为保障到账时效,建议在提交理赔资料时以工、农、中、建、交或邮储等银行卡作为收款账户。
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="claims-service-box">
+                                <ul class="claims-service-tab-menu tac clearfix">
+                                    {% for flow in text.flowLst %}
+                                    <li class="claims-service-tab-item {% if loop.first %}active{% endif %}">
+                                        <i class="iconfont">&#xe733;</i>
+                                        <p class="pt20">{{ flow.content }}</p>
+                                    </li>
+                                    {% if not loop.last %}
+                                    <li class="claims-service-tab-item claims-service-tab-separator">
+                                        <i class="iconfont">&#xe707;</i>
+                                    </li>
+                                    {% endif %}
+
+                                    {% endfor %}
+                                </ul>
+
+                                <div class="claims-service-tab-container">
+                                    {% for flow in text.flowLst %}
+                                    <div class="claims-service-tab-pane {% if not loop.first %}fn-hide{% endif %}">
+                                        {{ flow.description | safe }}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                            {% endif %}
+                            <!--claims-service-box-->
+                        </div>
+                        <!--product-claims-service end-->
+
+                        <div class="product-claims-notice">
+                            <h3 class="f14 pb20 pt20 mb20 fc6 fb bor-bottom">理赔须知</h3>
+                            {% if text.compensateNotice != null and text.compensateNotice | trim != '' %}
+                            <div class="f12 lh20 clearfix">
+                                {{ text.compensateNotice|safe }}
+                            </div>
+                            {% else %}
+                            <div class="f12 lh20 clearfix">
+                                1、如需报案或理赔协助服务,请拨打全国服务电话: {{ tenant.telephone }}。<br>
+                                2、报案时,请您提供保单号(或有效证件号码)、出险人姓名、出险时间、出险地点、出险原因、治疗就医情况等基本信息。<br>
+                                3、您报案后,我们将会给您发送索赔指引邮件,告知您资料要求和理赔流程。<br>
+                                4、发生合同约定保险事故需要到医院接受治疗,请到合同约定的医院(一般是二级或二级以上公立医院)进行就诊治疗。并请提醒主治医生使用医保范围内用药、诊疗项目及服务设施。就诊的同时请妥善保存病历(包含首诊病历)、原始收费凭证、处方、诊断证明、检查化验报告、住院证明等就医相关材料,以便向保险公司办理索赔申请。<br>
+                                5、一对一理赔协助:我们将全程协助您报案、告知您在当地如何处理、告知索赔所需相关证明资料、并监督保险公司理赔结案和协助催付赔款等。 <br>
+                                6、领款方式:通过银行转账的方式,保险公司将通过财务系统直接向您所指定的银行账户进行转账支付。需要您提供开户银行、户名、账号等信息,建议您选择工农中建交或邮储,以便保险公司快速处理。
+                            </div>
+                            {% endif %}
+                        </div>
+                        <!--product-claims-datas end-->
+
+                        {% if text.compensateCase != null and text.compensateCase|trim != ''%}
+                        <div class="product-claims-cases">
+                            <h3 class="f14 pb20 pt20 mb20 fc6 fb bor-bottom">理赔案例</h3>
+
+                            <div class="f12 lh20 clearfix">
+                                {{ text.compensateCase|safe }}
+                            </div>
+                        </div>
+                        <!--product-claims-cases end-->
+                        {% endif %}
+                    </div>
+                    <!--detail-product-claims end-->
+                </div>
+                <!--detail-pane end-->
+
+                <!--产品问题-->
+                {% if text.faqLst and text.faqLst.length != 0 %}
+                <div class="detail-pane pt30 pb30 fn-hide">
+                    <div class="detail-product-faq pr30">
+                        <dl class="detail-product-faq-list ml30">
+                            {% for faq in text.faqLst %}
+                            <dt class="product-faq-qution fb">
+                                <i class="ico">Q</i>{{ faq.question|safe }}
+                            </dt>
+                            <dd class="product-faq-reply">
+                                <i class="ico">A</i>{{ faq.answer|safe }}
+                            </dd>
+                            {% else %}
+                            {% endfor %}
+                        </dl>
+                        <!--detail-product-faq-list end-->
+
+                    </div>
+                    <!--detail-product-faq end -->
+                </div>
+                {% endif %}
+
+                {% block detail_tab_container_end %}
+                {% endblock %}
+            </div>
+        </div>
+        <!--detail-tab-container end-->
+
+        <!--置顶class fixed-sidebar如 class="detail-sidebar fixed-sidebar" -->
+        <div class="detail-sidebar">
+            {% block detail_sidebar %}
+            <div class="detail-sidebar-container pt30">
+                {% if tenant.isInternalTenant %}
+                <table class="sidebar-level bor-bottom">
+                    <tr>
+                        <td>
+                            <p class="count-title f16 fc3 mb35 fb pl30">累计销量</p>
+                            <p class="f16 fc3 count-price">{{ data.basicSellCount + data.realSellCount or '0' }}</p>
+                        </td>
+                    </tr>
+
+                </table>
+                {% endif %}
+                <div class="detail-sidebar-info">
+                    <div class="sidebar-service">
+                        {% if text.promiseLst and text.promiseLst.length > 0 %}
+                        <h3 class="f16 fc3 fb pl30 mt30">服务与承诺</h3>
+
+                        <ul class="sidebar-service-list pb30 mt25 bor-bottom">
+                            {% for promise in text.promiseLst %}
+                            <li class="sidebar-service-item">
+                                <i class="iconfont primary-color f18 mr10">
+                                    <span class="diy-font-color">
+                                        &#xe725;</span></i>{{ promise.name|safe }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+
+                        {% endif %}
+                        <h3 class="f16 fc3 fb pl30 mt30">客户须知</h3>
+                        <ul class="recommend-list pb30 mt25 bor-bottom">
+                            <li>
+                                <i class="dot">
+                                    <span class="diy-font-color f24">•</span></i>
+                                <a href="provision-{{ prodId }}-{{ planId }}.html" target="_blank">产品条款</a>
+                            </li>
+                            {% if text.productDisplayProvisionVo.pictureRateTable %}
+                            <li>
+                                <i class="dot">
+                                    <span class="diy-font-color f24">•</span></i>
+                                <a href="{{ text.productDisplayProvisionVo.pictureRateTable }}" target="_blank">费率表</a>
+                            </li>
+                            {% endif %}
+                            {% if text.productDisplayProvisionVo.claimsRatio and
+                            text.productDisplayProvisionVo.claimsRatio != '' and
+                            text.productDisplayProvisionVo.claimsRatio != ',,'%}
+                            <li>
+                                <i class="dot">
+                                    <span class="diy-font-color f24">•</span></i>
+                                <a href="claimlist-{{ prodId }}-{{ planId }}-{{text.productDisplayProvisionVo.claimsRatio }}.html"
+                                    target="_blank">保险金赔付比例</a>
+                            </li>
+                            {% endif %}
+                            {% if text.productDisplayProvisionVo.claimId and text.productDisplayProvisionVo.claimId !=
+                            '' %}
+                            <li>
+                                <i class="dot">
+                                    <span class="diy-font-color f24">•</span></i>
+                                <a href="claim-{{ prodId }}-{{ planId }}-{{text.productDisplayProvisionVo.claimId}}.html"
+                                    target="_blank">赔偿方式</a>
+                            </li>
+                            {% endif %}
+                            {% for linkKey, itemHref in text.tipsLinkMap %}
+                            {% if linkKey === "客户告知书" %}
+                            <li>
+                                <i class="dot">
+                                    <span class="diy-font-color f24">•</span></i>
+                                <a href="{{itemHref}}" target="_blank">{{linkKey}}</a>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            {% if text.productDisplayProvisionVo.picturePolicy %}
+                            <li>
+                                <i class="dot">
+                                    <span class="diy-font-color f24">•</span></i>
+                                <a href="{{ text.productDisplayProvisionVo.picturePolicy }}" target="_blank">保单样本</a>
+                            </li>
+                            {% endif %}
+                            <li>
+                        </ul>
+                    </div>
+                    <!--sidebar-service end-->
+                </div>
+                <!--detail-sidebar-info end-->
+            </div>
+            <!-- 关联组合产品跳转 -->
+            <div class="group-product"></div>
+            {% endblock %}
+        </div>
+        <!--detail-sidebar end-->
+    </div>
+    <!--detail-primary-->
+</div>
+<!--layout end-->
+</div>
+<!--detail-page end-->
+
+<input type="hidden" id="__aaaaa" value="{{data.basicProductStatus}}">
+<input type="hidden" id="__bbbbb" value="{{data.productStatus}}">
+<input type="hidden" id="__ccccc" name="specialProcessesType" value="{{cpsconfig.specialProcessesType}}">
+
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="{{ resDomain }}/dist/js/product.js"></script>
+<!-- 控制右侧服务与承诺的字体颜色 -->
+<script>
+    $(".recommend-list > li > a").mouseover(function () {
+        $(this).addClass("diy-font-color");
+    });
+    $(".recommend-list > li > a").mouseout(function () {
+        $(this).removeClass("diy-font-color");
+    });
+</script>
+{% include "./_merak_sdk.html" %}
+{% endblock %}

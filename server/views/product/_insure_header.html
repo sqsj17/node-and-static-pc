@@ -1,0 +1,29 @@
+<div class="order-header-wrap">
+    <div class="order-header  clearfix layout">
+
+        <div class="order-header-logo fl diy-mt20">
+            <a href="//www.huize.com" title="慧择保险网">
+                <img src="{{resDomain}}/img/logo.png" height="50" alt="慧择保险网"/>
+            </a>
+        </div>
+
+        <div class="hz-step fr">
+            <div class="hz-step-box">
+                <ol class="hz-step-list">
+                    <li class="hz-step-item {% if index == 1 %}hz-step-item-active{%endif%}"><i class="dot">1</i><span>健康告知</span></li>
+                    <li class="hz-step-item {% if index == 2 %}hz-step-item-active{%endif%}"><i class="dot">2</i><span class="hz-step-text" style="right: -10px;">填写投保信息</span>
+                    </li>
+                    <li class="hz-step-item  {% if index == 3 %}hz-step-item-active{%endif%}"><i class="dot">3</i><span class="hz-step-text" style="right: -17px;">确认并支付</span></li>
+                    <li class="hz-step-item last-item"></li>
+                </ol>
+            </div>
+        </div>
+        <!--step end-->
+
+    </div>
+    <!--order-header end-->
+    <input type="hidden" id="index" value="{{index}}"/>
+</div>
+<!--order-header-wrap end-->
+<script>
+</script>

@@ -1,0 +1,293 @@
+{% set page = "insure" %}
+{% extends "_parent.html" %}
+
+{% block link %}
+<link rel="stylesheet" href="{{ resDomain }}/css/order.css" />
+<link rel="stylesheet" href="{{ resDomain }}/js/plugin/webuploader/webuploader.css" />
+<link rel="stylesheet" href="{{ resDomain }}/css/layer-main.css">
+<link rel="stylesheet" href="{{ resDomain }}/css/detail.css" />
+<link rel="stylesheet" href="{{ resDomain }}/css/pay.css" />
+<link rel="stylesheet" href="{{ resDomain }}/css/alynvc.css" />
+{% endblock link %}
+
+{% block body %}
+<!-- 阿里云人机验证 -->
+<div class='captcha-container hide'>
+    <div id="captcha"></div>
+</div>
+{% block detail_nav %}
+{% endblock %}
+<input type="hidden" id="partnerId" value="{{ partnerId }}" />
+<input type="hidden" id="prodId" value="{{ prodId }}" />
+<input type="hidden" id="planId" value="{{ planId }}" />
+<input type="hidden" id="bsicProductId" value="{{ data.bsicProductId }}" />
+<input type="hidden" id="trialGenes" value="{{ trialGenes }}" />
+<input type="hidden" id="notifyAnswerId" value="{{ notifyAnswerId }}" />
+<input type="hidden" id="cuid" value="{{cuid}}">
+<input type="hidden" id="thirdPartyId" value="{{thirdPartyId}}">
+<input type="hidden" id="saveType" value="{{saveType}}">
+<input type="hidden" id="tempInsureInfo" value="{{tempInsureInfo}}" />
+<input type="hidden" id="tempInsureNum" value="{{tempInsureNum}}" />
+<input type="hidden" id="encryptInsureNum" value="{{encryptInsureNum}}" />
+<input type="hidden" id="renewalInsureNum" value="{{renewalInsureNum}}" />
+<input type="hidden" id="isFree" value="{{isFree}}" />
+<input type="hidden" id="isMultipleInsured" value="{{isMultipleInsured}}" />
+<input type="hidden" id="manyInsuredH5Url" value="{{manyInsuredH5Url}}" />
+{% if(data.bankSignAgreementList) %}
+<input type="hidden" id="bankSignAgreementList" value="{{JSON.stringify(data.bankSignAgreementList)}}">
+{% endif %}
+{% if(data.insuranceExtendConfirmation) %}
+<input type="hidden" id="insuranceExtendConfirmation" value="{{data.insuranceExtendConfirmation}}">
+{% endif %}
+<div class="insure-step-page  pt20 pb20 f14" style="background: #f0f0f0;">
+    <!--详情页面标识-->
+    <div class="layout clearfix pb30">
+        <div class="insure-step-primary">
+            <div class="insure-step-container ">
+
+                <div class="insure-write-tip">
+                    为了保障您的权益，请填写真实有效的信息。您填写的内容仅供投保使用，对于您的信息我们会严格保密。
+                </div>
+                <div class="insure-step-body pl30 pr30 bgfw">
+                    <form id="signupForm" method="post" class="form-horizontal" action="">
+                        <div id="insure-pannel">
+                            <div class="bgfw hz-loading-wrap">
+                                <img src="{{ resDomain }}/img/loading_50.gif">
+                                <span class="hz-loading-text">正在加载，请稍后...</span>
+                            </div>
+                        </div>
+                        {% if partnerAuthState !== 2 and partnerCooperativeTypeV2 !== 2 %}
+                        <div class="person-write-info" style="border-top: none;">
+                            <div class="bgfw">
+                                <a class="disabled hz-button hz-button-primary submit-button diy-background">暂停投保</a>
+                            </div>
+                        </div>
+                        {% else %}
+
+                        <div class="person-write-info" style="border-top: none;">
+                            <div id="protocol" style="padding-left: 180px"></div>
+                            {% if favoriteContactCheck == true %}
+                            <div class="mb10 mt10 saveContract none" id="saveFavoriteContact">
+                                <label class="label-item vis-hide">保存为常用联系人</label>
+                                <!-- hz-check-item-checked -->
+                                <div class="hz-check-item inline-block" for="contacts10" rel="checkbox">
+                                    <i class="hz-check-icon"></i>
+                                    <input class="insure-checkbox fn-hide" type="checkbox" name="isSaveFavoriteContact"
+                                        value="1" checked="checked">
+                                    <span class="hz-check-text f12 fc6">保存常用投被保人信息，二次投保免输入</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="mt20">
+                                <label class="label-item vis-hide">提交</label>
+                                {% if stopAddManualUnderwritingStatus == 1 %}
+                                <a class="disabled hz-button hz-button-primary submit-button" href="javascript:">
+                                    <span class="f16">
+                                        已停售
+                                    </span>
+                                </a>
+                                {%else%}
+                                <a {% if(data.product.status==1 or data.product.status==3) %} id="submit" {% endif %}
+                                    class="disabled hz-button hz-button-primary submit-button diy-background"
+                                    href="javascript:">
+                                    <span class="f16">
+                                        {{"提交领取" if(isFree == 1) else "提交投保单"}}
+                                    </span>
+                                </a>
+                                {% endif %}
+
+                                {% block temp_insure_end %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </form>
+                </div>
+                <!--health-body end-->
+            </div>
+        </div>
+        <div class="insure-step-secondary">
+            <div class="insure-step-secondary-fixed">
+                <div class="bgfw hz-loading-wrap">
+                    <img src="{{ resDomain }}/img/loading_50.gif">
+                    <span class="hz-loading-text">正在加载，请稍后...</span>
+                </div>
+                <div class="secondary-hot-product bgfw" style="display: none;">
+                    <div class="secondary-hot-product-head" style="padding: 10px 30px;">
+                        <a class="company-logo">
+                            <img class="lazy" src="{{ data.bigLogoImg }}" height="45">
+                        </a>
+                        <h2 class="hot-product-title mt35 f18"><a
+                                href="detail?prodId={{ prodId }}&planId={{ planId }}&{{ "cuid="+cuid if cuid else "" }}">{{ data.name }}</a></h2>
+                    </div>
+                    <div class="secondary-hot-product-body scroller" style="max-height:300px;">
+                    </div>
+                    {% if data.hideModifyRestrict !== true %}
+                        <div class="bgfw pb10 js-show-trial-dialog">
+                            <p class="tar f13 mr30"><a href="javascript:Insure.render.showTrialDialog();"
+                                    class="js-trial-dialog-btn diy-font-color">查看详情</a></p>
+                        </div>
+                    {% endif %}
+                    <div class="secondary-hot-product-foot">
+                        <div class="hz-list lh20 buyCountDiv">
+                            <div class="hz-list-item">
+                                <span class="hz-list-title">份数</span>
+                                <p class="hz-list-content tar buyCount">1份</p>
+                            </div>
+                        </div>
+                        <div class="mt15 hot-product-price">
+                            <div class="yearPay">
+                                <div class="none js-base-price-content">
+                                    <p class="primary-color diy-font-color fr">
+                                        ￥ <span class="product-price js-base-price f14"><i></i></span>
+                                    </p>
+                                    <span>基本保费</span>
+                                </div>
+                                <div class="none js-smart-price-content">
+                                    <p class="primary-color diy-font-color fr">
+                                        ￥ <span class="product-price js-smart-price f14"><i></i></span>
+                                    </p>
+                                    <span>加费</span>
+                                </div>
+                                <div class="pt10">
+                                    {% if(isFree == 1) %}
+                                    <p class="primary-color diy-font-color fr">
+                                        <span class="is-free-style" style="font-size:18px;">限时免费</span>
+                                    </p>
+                                    {%else%}
+                                    <p class="primary-color diy-font-color fr">
+                                        ￥ <span class="product-price total-price f36"><i></i></span>
+                                    </p>
+                                    {%endif%}
+                                    <span>合计</span>
+                                </div>
+                            </div>
+                            <div class="monthPay none">
+                                <div class="pt10">
+                                    <p class="primary-color diy-font-color fr">
+                                        ￥ <span class="product-price total-price f20"><i></i></span>
+                                    </p>
+                                    <span class="fc3 f14">首期：</span>
+                                </div>
+                                <div class="pt10">
+                                    <p class="primary-color diy-font-color fr " style="text-align: right;">
+                                        ￥ <span class="next-month-product-price  f20"><i></i></span>
+                                        <!-- <span class="iconfont cursor-pointer fc9 termTrialDetail" style="margin-right: -10px;">&#xe60a;</span> -->
+                                    </p>
+                                    <span class="fc3 f14">续期：</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="insureDeclareTip" class="none">
+    {% for tips in text.hzinsTips %}
+    <li><strong>{{ loop.index }}. </strong>{{ tips|safe }}</li>
+    {% else %}
+    暂无内容
+    {% endfor %}
+</div>
+
+<!-- 银行代扣功能 -->
+<div class="bank-with-box-mask none"></div>
+<div class="bank-with-box-main none">
+    <div class="bank-with-content">
+        <div class="bank-with-desc">
+            <img src="{{ resDomain }}/img/icon-bank-whit-warn.png" alt="warn" />
+            <p>应银行代扣要求，支付需验证后扣款。验证码已发送至手机<span class="js-bank-with-moblie"></span>，请查收</p>
+        </div>
+        <div class="sms-code">
+            <label class="sms-code-label">验证码</label>
+            <input type="text" class="sms-code-input" placeholder="请输入验证码" />
+            <a href="javascript:;" class="diy-background get-sms-code js-get-sms-code">获取验证码</a>
+        </div>
+        <div class="agree-term">
+            <div class="hz-check-item fl js-agree-checked">
+                <i class="hz-check-icon"></i>
+                <span class="hz-check-text">我已查看并同意</span>
+            </div>
+            <a class="diy-font-color" target="_blank" href="//static.huizecdn.com/pdf/com/银行委托扣款自助签约协议.pdf"
+                data-mid="105">《代扣协议》</a>
+        </div>
+        <div class="bank-with-btn">
+            <a href="javascript:;" class="hz-button hz-button-primary diy-background js-bank-with-confirm">确认</a>
+        </div>
+    </div>
+</div>
+
+
+<!-- 弹窗 -->
+<div id="check-order" class="none">
+    <div class="mode">
+        <p>请确认</p>
+        <span class="tip">您本次提交的健康问卷与历史记录的不一致，请确认以下健康问卷是否为最终结论。</span>
+        <!-- 健康告知 -->
+        <div class="health">
+            <div class="header">
+                <span class="title">健康告知</span>
+                <span class="close js-close"></span>
+            </div>
+            <div class="item">
+                <div class="header">
+                    <span>投保人健康告知</span>
+                    <span class="close js-close"></span>
+                </div>
+                <div class="content">
+                    <div>1.被保险人是否XXXXXXXX</div>
+                    <div>1.被保险人是否XXXXXXXX</div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="header">
+                    <span>被保人健康告知</span>
+                    <span class="close js-close"></span>
+                </div>
+                <div class="content">
+                    <div>1.被保险人是否XXXXXXXX</div>
+                    <div>1.被保险人是否XXXXXXXX</div>
+                </div>
+            </div>
+        </div>
+        <!-- 智能核保 -->
+        <div class="ai">
+            <div class="header">
+                <span class="title">智能核保</span>
+                <span class="close js-close"></span>
+            </div>
+        </div>
+        <!-- 人工核保 -->
+        <div class="artificial">
+            <div class="header">
+                <span class="title">人工核保</span>
+                <span class="close js-close"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--detail-page end-->
+
+{% endblock %}
+{% block script %}
+<!--<script>-->
+<!--require(['new/app/insure/main'],function(app){-->
+<!--app.init()-->
+<!--});-->
+<!--</script>-->
+<script type="text/javascript" src="{{ resDomain }}/js/tpl/tpl.js"></script>
+<script type="text/javascript" src="{{ resDomain }}/dist/js/insure.js"></script>
+<script type="text/javascript">
+    require(['webuploader'], function (webupload) {
+        window.WebUploader = webupload;
+        Insure.init();
+    });
+</script>
+{% include "./_merak_sdk.html" %}
+{% endblock %}

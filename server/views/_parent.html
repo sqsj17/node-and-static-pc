@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    {% block _ga_header %} 
+     <!--_ga_header -->
+    {% endblock %}
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    {% block keywords %}
+    <meta name="keywords" content="{{tenant.cpsKeyword}}" />
+    {% endblock %}
+    {% block description %}
+    <meta name="description" content="{{tenant.cpsDescription}}" />
+    {% endblock %}
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    {% set siteColor = ShopConfig.siteColor or tenant.theme.mainColor or  defaultTenant.theme.mainColor or '#00a8f7'%}
+    <style>
+      .diy_mould-color, .diy-font-color {color: {{siteColor}}!important}
+      .diy_mould-color-hover:hover, a.diy_mould-color-hover:hover {color: {{siteColor}}}
+      .diy_mould-background, .diy-background, #kkpager span.curr {background-color: {{siteColor}}!important}
+      .diy_mould-background-2, .ui-check-click {background-color: {{siteColor}}}
+      .submit_butTextx {background-color: {{siteColor}}!important}
+      .diy_mould-border-color, .filter-active-tag {border-color: {{siteColor}}!important}
+      .filter-active-tag > .input-select > .input-select-text {border-color: {{siteColor}};}
+      .declare-content a{color: {{siteColor}} !important }
+      .diy-tab-color.active { color: {{siteColor}} !important; border-bottom: solid 1px {{siteColor}} !important }
+      .block-table table .left a:hover { color: {{siteColor}} !important; }
+      .layer-teaching-content .options-area ul li.active { border-color: {{siteColor}} !important; color: {{siteColor}} !important; }
+      .layer-teaching-content .options-area .button-area .button.reset-button {color: {{siteColor}} !important;border-color: {{siteColor}} !important;}
+      .layer-teaching-content .options-area .button-area .button.ok-button {background: {{siteColor}} !important;border-color: {{siteColor}} !important;}
+      .layer-teaching-content .options-area ul li.active .opt-bg {background: {{siteColor}} !important;}
+      .detail-address-box svg {fill: {{siteColor}} !important;}
+      .detail-ensure-opt .hz-dropdown.filter-active-tag>.input-select>.input-select-text, .detail-ensure-opt .hz-dropdown:hover>.input-select>.input-select-text { border-color: {{siteColor}} !important; }
+    </style>
+    <!-- huize plugin -->
+    <script type="text/javascript" src="{{ resDomain }}/js/huize-plugins/huize-plugin.js?v=20201118"></script>
+    
+    <!-- huize service -->
+    <script type="text/javascript" src="{{ resDomain }}/js/huize-service/huize-service.js?v=20201118"></script>
+  </head>
+
+  <body>
+    <input type="hidden" id="partnerDomain" value="{{partnerDomain}}" />
+    <input type="hidden" id="partnerId" value="{{partnerId}}" />
+    <input type="hidden" id="merchantId" value="{{merchantId}}" />
+    <input type="hidden" id="merchantName" value="{{merchantName}}" />
+    <input type="hidden" id="tenantName" value="{{tenantName}}" />
+    <script>
+      window.__MERCHANT_ID = 0;
+      window.__MERCHANT_DOMAIN = 'index';
+      window.__TENANT_NAME = "";
+      window._hub = new HuizePlugin.default();
+      window.__QX_SERVICE_PHONE_TYPE = '{{ShopConfig.servicePhoneType}}';
+      window.__QX_ON_LINE_STATE = '{{ShopConfig.onLineState}}';
+      try {
+         window.__MERCHANT_ID = parseInt(document.getElementById("merchantId").value);
+         window.__MERCHANT_NAME = document.getElementById("merchantName").value;
+         window.__MERCHANT_DOMAIN = document.getElementById("partnerDomain").value;
+         window.__TENANT_NAME = document.getElementById("tenantName").value;
+         window.__H5_PATH = document.getElementById("h5Path").value;
+         window.__isHzScreenshotRobot = document.getElementById("isHzScreenshotRobot").value;
+         window.__STOP_SELL_INFO = document.getElementById("stopSellInfo").value;
+		     window.__tel400 = document.getElementById("tel400").value;
+         window.__SITE_COLOR = '{{siteColor}}';
+         window.__API_MAIN_DOMAIN = '{{tenant.apiMainDomain}}';
+         window.__AGENT_MAIN_DOMAIN = '{{tenant.agentMainDomain}}';
+         var productBasicData = document.getElementById("productBasicData").value;
+         window._productBasicInfo = productBasicData ? JSON.parse(productBasicData || '{}') : {};
+      } catch (e) {
+        alert(e)
+      }
+    </script>
+
+    {% block hidden_form %}
+    <!--隐藏的表单值放这里-->
+    {% endblock %} 
+   
+    {% block header %}
+    <!--header-->
+    {% endblock %} 
+    
+    {% block body %}
+    <!--body-->
+    {% endblock %}
+    <script>
+      // 页面开始加载时间
+      var hz_tj_loadTime = new Date().getTime();
+    </script>
+
+    <script>
+      var serverDomain = "{{serverDomain}}",
+        resDomain = "{{resDomain}}",
+        imgDomain = "{{imgDomain}}",
+        partnerDomain = "{{partnerDomain}}";
+    </script>
+
+    <script
+      type="text/javascript"
+      src="{{resDomain}}/js/main.js?V1.0.1"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{resDomain}}/js/require.config.js?V1.0.1"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{resDomain}}/js/plugin/my-calendar/my-calendar.js"
+    ></script>
+
+    {% block footer %}
+    {% endblock %}
+
+    {% block script %}
+    {% endblock %}
+  </body>
+
+</html>
